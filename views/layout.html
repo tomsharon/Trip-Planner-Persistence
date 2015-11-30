@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <title>Trip Planner - {% block title %}{% endblock %}</title>
+  <head>
+    <link href='http://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/stylesheets/style.css" rel="stylesheet">
+  </head>
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top navbar-pad" role="navigation">
+      <div class="container-flex">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand clearfix" href="/"><span class="glyphicon glyphicon-map-marker"></span><span>Trip Planner</span></a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    {% block content %}
+    {% endblock %}
+
+    <script src="/jquery/jquery.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfQxgWt-LSZcEmTEN8581Uq9SzZHnpuys&sensor=true"></script>
+    <script src="/js/maps.js"></script>
+    <script src="/js/app.js"></script>
+    <script>
+    //We don't need to make AJAX requests in this <script>
+
+    //Can make AJAX requests from front-end console
+    //e.g.
+    // $.get('/api/days', function (data) {console.log('GET response data', data)})
+    // .fail( function (err) {console.error('err', err)} );
+    //or
+    // $.post('/api/days', function (data) {console.log('POST response data', data)})
+    // .fail( function (err) {console.error('err', err)} );
+
+
+    // var createDayInDatabase = function(dayNum) {
+    //     $.ajax({
+    //       method: "POST",
+    //       url: "/api/days/new_day",
+    //       data: {number: dayNum},
+    //       success: function(responseData) {
+    //         console.log("No need to refresh...", responseData)
+    //       },
+    //       error: function(errorObj) {
+    //         console.log(errorObj)
+    //       }
+    //     })
+    // }
+
+    // var deleteDayFromDatabase = function(dayNum) {
+    //   $.ajax({
+    //     method: "DELETE",
+    //     url: "/api/days/" + dayNum,
+    //     success: function(responseData) {
+    //       console.log("Day you deleted: ", responseData)
+    //     },
+    //     error: function(errorObj) {
+    //         console.log(errorObj)
+    //     }
+    //   })
+    // }
+    </script>
+  </body>
+</html>
