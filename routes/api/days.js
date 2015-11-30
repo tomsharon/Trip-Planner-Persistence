@@ -20,7 +20,7 @@ router.get("/days", function(req, res, next) {
 //GET a specific day
 router.get("/days/:dayNum", function(req, res, next) {
 	var dayNum = req.params.dayNum;
-	Day.find({number: dayNum}).exec()
+	Day.find({number: dayNum}).populate("Hotel").exec()
 		.then(function(specificDay){
 			res.send(specificDay);
 		})
@@ -53,32 +53,46 @@ router.post("/days/new_day", function(req, res, next) {
 
 //Create a new attraction on a given day
 router.post("/days/:dayNum/:attractionType", function(req, res, next) {
-	var dayNum = req.params.dayNum;
+	var dayNum = +req.params.dayNum;
 	var attractionName = req.body.name;
 	var attractionType; 
-	if(req.params.attractionType === "Hotel") attractionType = Hotel;
-	if(req.params.attractionType === "Restaurant") attractionType = Restaurant;
-	if(req.params.attractionType === "Activity") attractionType = Activity;
-	Day.find({ number: dayNum }).exec()
+	if(req.params.attractionType === "hotels") attractionType = Hotel;
+	if(req.params.attractionType === "restaurants") attractionType = Restaurant;
+	if(req.params.attractionType === "activities") attractionType = Activity;
+	Day.findOne({ number: dayNum }).exec()
 		.then(function(foundDay) {
-			attractionType.find({ name: attractionName }).exec()
+			console.log(foundDay);
+			attractionType.findOne({ name: attractionName }).exec()
 			.then(function(foundAttraction) {
-				if(req.params.attractionType === "Hotel") {
+				console.log(foundAttraction);
+				if(req.params.attractionType === "hotels") {
 					foundDay.hotel = foundAttraction._id;
-					foundDay.save();
+					foundDay.save()
+					.then(function(savedDay) {
+						res.send(savedDay)
+					})
+					.then(null, next)
 				}
-				if(req.params.attractionType === "Restaurant") {
+				if(req.params.attractionType === "restaurants") {
 					foundDay.restaurants.push(foundAttraction._id);
-					foundDay.save();
+					foundDay.save()
+					.then(function(savedDay) {
+						res.send(savedDay)
+					})
+					.then(null, next)
+
 				}
-				if(req.params.attractionType === "Activity") {
+				if(req.params.attractionType === "activities") {
 					foundDay.activities.push(foundAttraction._id);
-					foundDay.save();
+					foundDay.save()
+					.then(function(savedDay) {
+						res.send(savedDay)
+					})
+					.then(null, next)					
 				}
 			})
 		})
-})	
-
+})
 
 
 module.exports = router;

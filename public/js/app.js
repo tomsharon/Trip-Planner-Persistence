@@ -145,6 +145,18 @@ $(function () {
         days[currentDay - 1].push({place: placeObj, marker: createdMapMarker, section: sectionName});
         $listToAppendTo.append(createItineraryItem(placeName));
 
+        $.ajax({
+            method: "POST",
+            url: "/api/days/" + currentDay + "/" + sectionName,
+            data: { name: placeName },
+            success: function(responseData) {
+                console.log(responseData)
+            },
+            error: function(errorObj) {
+                console.log(errorObj);
+            }
+        })
+
         mapFit();
 
     });
