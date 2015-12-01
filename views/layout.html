@@ -49,50 +49,54 @@
     // .fail( function (err) {console.error('err', err)} );
 
 
-    // var createDayInDatabase = function(dayNum) {
-    //   var hotelID = "56548bb833177487236e83e4";
-    //     $.ajax({
-    //       method: "POST",
-    //       url: "/api/days/new_day",
-    //       data: {number: dayNum, hotel: hotelID},
-    //       success: function(responseData) {
-    //         console.log("No need to refresh...", responseData)
-    //       },
-    //       error: function(errorObj) {
-    //         console.log(errorObj)
-    //       }
-    //     })
-    // }
-
-    // var deleteDayFromDatabase = function(dayNum) {
-    //   $.ajax({
-    //     method: "DELETE",
-    //     url: "/api/days/" + dayNum,
-    //     success: function(responseData) {
-    //       console.log("Day you deleted: ", responseData)
-    //     },
-    //     error: function(errorObj) {
-    //         console.log(errorObj)
-    //     }
-    //   })
-    // }
-   </script>
-    <script>
-    $(".day-buttons").on("click", ".day-btn", function() {
-      var $this = $(this)
-      if(!$this.hasClass("add-day")) {
+    var createDayInDatabase = function(dayNum) {
+      var hotelID = "56548bb833177487236e83e4";
         $.ajax({
-          method: "GET",
-          url: "/api/days/" + +$this.text(),
-          success: function(returnedDay) {
-            // console.log(returnedDay)
-            // placesForThisDay.forEach(function (place) {
-            //     $('#' + place.section + '-list').find('ul').append(createItineraryItem(place.place.name));
-            //     place.marker.setMap(map);
-            // });
-            // $("#hotels-list ul").append("<li>" + "<div class='itinerary-item'>" + "<span class='title'>" +  + "</span>" + "<button class='btn btn-xs btn-danger remove btn-circle removingButton'>x</button>" + "</div>" + "</li>")
+          method: "POST",
+          url: "/api/days/new_day",
+          data: {number: dayNum, hotel: hotelID},
+          success: function(responseData) {
+            console.log("No need to refresh...", responseData)
+          },
+          error: function(errorObj) {
+            console.log(errorObj)
           }
         })
+    }
+
+    var deleteDayFromDatabase = function(dayNum) {
+      $.ajax({
+        method: "DELETE",
+        url: "/api/days/" + dayNum,
+        success: function(responseData) {
+          console.log("Day you deleted: ", responseData)
+        },
+        error: function(errorObj) {
+            console.log(errorObj)
+        }
+      })
+    }
+   </script>
+    <script>
+
+    //Remember, an AJAX request is nothing more than an http GET / POST / etc. call to your server just like any other http request. The only difference is that the browser knows not to render the data that is returned, but to simply let JavaScript deal with the return value.
+
+    //This return value is returnedDay in the AJAX request below
+    $(".day-buttons").on("click", ".day-btn", function() {
+      //THIS IS NULLIFIED
+      var $this = $(this);
+      var dayNum = +$this.text();
+      if(!$this.hasClass("add-day")) {
+        // $.ajax({
+        //   method: "GET",
+        //   url: "/api/days/" + dayNum,
+        //   success: function(returnedDay) {
+        //     days[dayNum - 1].push({place: returnedDay[0].hotel, marker: drawLocation(map, returnedDay[0].hotel.place[0].location, placeMapIcons.hotels), section: "hotels"})
+
+        //     //{place: placeObj, marker: createdMapMarker, section: sectionName}
+        //     // setDay(returnedDay)
+        //   }
+        // })
       } 
     })
     </script>

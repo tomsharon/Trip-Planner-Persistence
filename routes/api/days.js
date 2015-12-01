@@ -19,8 +19,8 @@ router.get("/days", function(req, res, next) {
 
 //GET a specific day
 router.get("/days/:dayNum", function(req, res, next) {
-	var dayNum = req.params.dayNum;
-	Day.find({number: dayNum}).populate("Hotel").exec()
+	var dayNum = +req.params.dayNum;
+	Day.find({number: dayNum}).populate("hotel").exec()
 		.then(function(specificDay){
 			res.send(specificDay);
 		})
@@ -29,7 +29,7 @@ router.get("/days/:dayNum", function(req, res, next) {
 
 //DELETE a specific day
 router.delete("/days/:dayNum", function(req, res, next) {
-	var dayNum = req.params.dayNum;
+	var dayNum = +req.params.dayNum;
 	Day.find({ number: dayNum}).remove().exec()
 		.then(function(specificDay){
 			res.send(specificDay);
@@ -51,7 +51,7 @@ router.post("/days/new_day", function(req, res, next) {
 		.then(null, next);
 })
 
-//Create a new attraction on a given day
+//CREATE a new attraction on a given day
 router.post("/days/:dayNum/:attractionType", function(req, res, next) {
 	var dayNum = +req.params.dayNum;
 	var attractionName = req.body.name;
@@ -61,10 +61,8 @@ router.post("/days/:dayNum/:attractionType", function(req, res, next) {
 	if(req.params.attractionType === "activities") attractionType = Activity;
 	Day.findOne({ number: dayNum }).exec()
 		.then(function(foundDay) {
-			console.log(foundDay);
 			attractionType.findOne({ name: attractionName }).exec()
 			.then(function(foundAttraction) {
-				console.log(foundAttraction);
 				if(req.params.attractionType === "hotels") {
 					foundDay.hotel = foundAttraction._id;
 					foundDay.save()
@@ -91,7 +89,9 @@ router.post("/days/:dayNum/:attractionType", function(req, res, next) {
 					.then(null, next)					
 				}
 			})
+			.then(null, next);
 		})
+		.then(null, next);
 })
 
 

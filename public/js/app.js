@@ -1,18 +1,24 @@
+//HEART OF MY FRONT END
+
+
 $(function () {
 
+    var setDay;
+
     var map = initialize_gmaps();
-
-    var days = [
-        []
-    ];
-
-    var currentDay = 1;
 
     var placeMapIcons = {
         activities: '/images/star-3.png',
         restaurants: '/images/restaurant.png',
         hotels: '/images/lodging_0star.png'
     };
+        
+    var days = [
+        []
+    ];
+
+    var currentDay = 1;
+
 
     var $dayButtons = $('.day-buttons');
     var $addDayButton = $('.add-day');
@@ -103,13 +109,14 @@ $(function () {
 
     };
 
-    var setDay = function (dayNum) {
+    setDay = function (dayNum) {
 
         if (dayNum > days.length || dayNum < 0) {
             return;
         }
-
+        console.log(dayNum)
         var placesForThisDay = days[dayNum - 1];
+
         var $dayButtons = $('.day-btn').not('.add-day');
 
         reset();
@@ -145,6 +152,7 @@ $(function () {
         days[currentDay - 1].push({place: placeObj, marker: createdMapMarker, section: sectionName});
         $listToAppendTo.append(createItineraryItem(placeName));
 
+        //Long way to do an ajax POST request
         $.ajax({
             method: "POST",
             url: "/api/days/" + currentDay + "/" + sectionName,
@@ -156,6 +164,18 @@ $(function () {
                 console.log(errorObj);
             }
         })
+
+        //Short way to do an AJAX POST request ($.post is just a wrapper around $.ajax specific for POST requests)
+        //PROMISE APPROACH. Jquery uses .done() instead of .then() for promises
+        $.post("/api/days/" + currentDay + "/" + sectionName, {name: placeName})
+            .done(function(responseData) {
+                console.log(responseData);
+            })         
+
+        //CALLBACK APPROACH for an ajax post request        
+        $.post("/api/days/" + currentDay + "/" + sectionName, {name: placeName}, function(responseData) {
+            console.log(responseData)
+        })        
 
         mapFit();
 
@@ -176,18 +196,45 @@ $(function () {
     });
 
     $dayButtons.on('click', '.day-btn', function () {
-        setDay($(this).index() + 1);
+        var $this = $(this);
+          var dayNum = +$this.text();
+          if(!$this.hasClass("add-day")) {
+            $.ajax({
+              method: "GET",
+              url: "/api/days/" + dayNum,
+              success: function(returnedDay) {
+                days[dayNum - 1].push({place: returnedDay[0].hotel, marker: drawLocation(map, returnedDay[0].hotel.place[0].location, placeMapIcons.hotels), section: "hotels"})
+                console.log(returnedDay)
+                setDay(dayNum);
+              }
+            })
+        }
     });
 
     $addDayButton.on('click', function () {
 
         var currentNumOfDays = days.length;
-        var $newDayButton = createDayButton(currentNumOfDays + 1);
+        var newDayNum = currentNumOfDays + 1
+        var $newDayButton = createDayButton(newDayNum);
 
         $addDayButton.before($newDayButton);
         days.push([]);
         setDayButtons();
         setDay(currentNumOfDays + 1);
+
+
+        //PROMISE APPROACH for an ajax post request. Jquery uses .done() instead of .then() for promises
+        $.post("/api/days/new_day", {number: currentNumOfDays + 1})
+            .done(function(responseData) {
+                console.log("Successfully added day " + newDayNum + " into your database. Check it out below:")
+                console.dir(responseData)        
+            })
+
+        //CALLBACK APPROACH for an ajax post request
+        // $.post("/api/days/new_day", {number: currentNumOfDays + 1}, function(responseData) {
+        //     console.log("Successfully added day " + newDayNum + " into your database. Check it out below:")
+        //     console.dir(responseData)
+        // })
 
     });
 

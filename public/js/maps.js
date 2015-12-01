@@ -59,3 +59,17 @@ function drawLocation(map, location, opts) {
     opts.map = map;
     return new google.maps.Marker(opts);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
